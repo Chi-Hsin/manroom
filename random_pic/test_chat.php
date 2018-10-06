@@ -16,7 +16,8 @@
      <div type="text" id="input_area" autofocus placeholder="輸入一些對話吧" style="overflow:auto;width:200px;min-height:30px;max-height:80px;border:1px #000 solid;display: inline-block;margin:10px 0 0 10px" contenteditable="true"></div>
     <button id="msg_send">送出</button>
     <button id="name_fix">修改暱稱</button>
-    <img src="../img/before/screenshot_20180626_105846.jpg" alt="" style="width:30px;height:30px">
+    <img src="../img/icon/shake.gif" alt="" style="width:30px;height:30px" id="test_icon">
+    
 
   </div>
  

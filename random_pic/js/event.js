@@ -186,6 +186,13 @@ $("#chat_area").on(
       e.scrollTop = e.scrollHeight;
       // alert($("#input_area").html())
   })
+  $("#test_icon").click(function(){
+    // $("#input_area").append("<p>123</p>");
+    var img = document.createElement("img");
+    img.classList.add("icon_emotion");
+    img.src = this.src;
+    $("#input_area").append(img);
+  })
 my_db.once("value",function(s)//資料第一次全部載入
   {
       $("#chat_area").html("");

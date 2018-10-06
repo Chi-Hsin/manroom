@@ -99,7 +99,7 @@ function append_dialogue(obj)//聊天框內產生對話內容
   var name_zone = document.createElement("span");
   var time_zone = document.createTextNode(obj.time);
   var content_zone = document.createElement("span");
-  content_zone.innerHTML = (obj.type == "text")?"說：<div style='background:red;display:inline-block;max-width:60%;word-break: break-all;'>"+obj.content+"</div>"
+  content_zone.innerHTML = (obj.type == "text")?"說：<div class='content_zone'>"+obj.content+"</div>"
                                                :"說："+"<img src='"+obj.content+"'>";
   
   name_zone.innerText = obj.name;

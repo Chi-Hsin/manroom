@@ -89,3 +89,11 @@ body
 {
   cursor:-webkit-grab;
 }
+.content_zone
+{
+  background:#ccc;
+  display:inline-block;
+  width:60%;
+  word-break: break-all;
+}
+.icon_emotion{width:30px;height: 30px;}
