@@ -70,7 +70,7 @@ body
 {
   border: 1px solid #000;
   width:500px;
-  height: 450px;
+  height: 95%;
   position: absolute;
   right: 20px;
   top: 20px;
@@ -89,11 +89,57 @@ body
 {
   cursor:-webkit-grab;
 }
-.content_zone
+.content_zone /*對話框修飾*/
 {
   background:#ccc;
-  display:inline-block;
+  margin-left:70px;
   width:60%;
   word-break: break-all;
 }
 .icon_emotion{width:30px;height: 30px;}
+#zoom_out /*縮小/放大聊天室視窗*/
+{
+  position: absolute;
+  right:40px;
+  top:0px;
+  cursor: pointer;
+}
+#zoom_out:hover
+{
+  background: url("../../utility_img/zoom_out2.png");
+}
+#zoom_in
+{
+  position: absolute;
+  right:10px;
+  top:0;
+  cursor: pointer
+}
+#zoom_in:hover
+{
+  background: url("../../utility_img/zoom_in2.png");
+}
+#setup /*設定齒輪按鈕*/
+{
+  position: absolute;
+  right:5px;
+  top:0;
+  cursor:pointer;
+}
+#setup:hover
+{
+  background: url("../../utility_img/setup2.png");
+}
+#mychat_box_zo
+{
+
+  border: 1px solid #000;
+  width:150px;
+  height:30px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  border-radius: 1px  1px 0 0;
+  background:#333;
+  display: none;
+}

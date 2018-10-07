@@ -1,8 +1,7 @@
 //Window Onload progress
   $(function(){
 
- $("#welcome_title").html("歡迎來到"+room_num+"聊天室");
-
+ $("#welcome_title").append("歡迎來到"+room_num+"聊天室");
 
 setTimeout(function(){$("#loading").hide()},2000);
 if(localStorage.getItem("color") == null) //新進使用者獲得一個隨機顏色
@@ -110,6 +109,16 @@ $("#welcome_title").on({ //可拖動聊天視窗
                   }
                 }
 })
+$("#zoom_out").click(function(){ //縮小視窗
+    $("#mychat_box").slideUp(function(){
+      $("#mychat_box_zo").show();
+    });
+})
+$("#zoom_in").click(function(){//放大視窗
+   $("#mychat_box_zo").hide(function(){
+      $("#mychat_box").show();
+    });
+})
 $("#pic_list").on("dragover",function(e){e.preventDefault();})
               .on(
                   {
@@ -171,14 +180,28 @@ $("#chat_area").on(
   })
   $("#input_area").on('keydown', function(e)//輸入對話欄
   {
-    // if(e.key == "Enter" && e.target.value != "")
-    // {
-    //   write($(this).val(),"text");
-    //   $("#input_area").val("");
-    //   var e = document.getElementById("chat_area");
-    //   e.scrollTop = e.scrollHeight;
-    // }
+    if(e.key == "Enter" && e.target.value != "")
+    {
+      // write($(this).val(),"text");
+      // $("#input_area").val("");
+      // var e = document.getElementById("chat_area");
+      // e.scrollTop = e.scrollHeight;
+      if(e.shiftKey)//換行
+      {
+         //alert()
+      }
+      else
+      {
+         $("#msg_send").click();
+         e.preventDefault();
+      }
+     
+    }
+
   });
+ 
+
+
   $("#msg_send").click(function(e){
       write($("#input_area").html(),"text");
       $("#input_area").html("");
