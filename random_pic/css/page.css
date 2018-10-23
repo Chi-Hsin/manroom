@@ -64,7 +64,7 @@ body
   background: #b7d2ff;
 }
 #chat_area{overflow: auto;height: 300px;width:100%;}
-#chat_area span{margin:0 0 0 20px;}
+#chat_area span.chat_name{margin:0 0 0 20px;}
 #name_after{display: none;}
 #mychat_box
 {
@@ -84,10 +84,24 @@ body
 {
   max-width: 200px;
 }
-#welcome_title{color: #fff;background:#333;border-radius: 10px  10px 0 0;}
+#welcome_title>h1{color: #fff;}
+#welcome_title
+{
+  background:#333;border-radius: 10px  10px 0 0;
+}
 #welcome_title:hover
 {
   cursor:-webkit-grab;
+}
+#welcome_title #setup_box /*設置欄位*/
+{
+  display: none;
+  width: 300px;
+  height: 300px;
+  background: pink;
+  position: absolute;
+  right:20px;
+  top:30px;
 }
 .content_zone /*對話框修飾*/
 {
@@ -130,6 +144,10 @@ body
 {
   background: url("../../utility_img/setup2.png");
 }
+#sign_out
+{
+  display:none;
+}
 #mychat_box_zo
 {
 
@@ -142,4 +160,14 @@ body
   border-radius: 1px  1px 0 0;
   background:#333;
   display: none;
+}
+#input_area
+{
+  overflow:auto;
+  width:200px;
+  min-height:30px;
+  max-height:80px;
+  border:1px #000 solid;
+  display: inline-block;
+  margin:10px 0 0 10px
 }

@@ -26,7 +26,8 @@ var postData,     //存放FireBase時儲存的物件資料
          msg: "換好了",
          fn: function(){click_sth();}
       }
-    ]
+    ],
+    setup_box = 0;//設置的BOX是否隱藏
 
 
 
@@ -62,12 +63,21 @@ function write(content,type)//寫入資料庫
      name: localStorage.getItem("name"),
      time: getTime(),
      content: content,//存入的內容  文字或圖檔
-     color: localStorage.getItem("color"),
-     // emotion_icon: emotion
+     color: localStorage.getItem("color")
   };
   try
   {
-    my_db.push(postData);
+    firebase.database().ref("/"+room_num+"/public_message").push(postData);//公共訊息存一份
+    if(localStorage.getItem("user_data") != null)
+    {
+      var user_data = JSON.parse(localStorage.getItem("user_data"));
+      firebase.database().ref(room_num)//個人訊息存一份在資料庫
+                         .child("user")
+                         .child(user_data.uid)
+                         .child("all_message")
+                         .push(postData);
+    }
+    
   }
   catch(e){alert(e)}
   
@@ -103,13 +113,15 @@ function append_dialogue(obj)//聊天框內產生對話內容
                                                :"說："+"<img src='"+obj.content+"'>";
   
   name_zone.innerText = obj.name;
-  name_zone.className = obj.name;
+  name_zone.className = "chat_name";
   name_zone.style.color = obj.color;
   $("#chat_area").append(p)
                  .find(p)
                  .append(time_zone)
                  .append(name_zone)
                  .append(content_zone);
+  // var e = document.getElementById("chat_area");
+  // e.scrollTop = e.scrollHeight;
 }
 function get_random_color()
 {

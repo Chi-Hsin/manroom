@@ -1,0 +1,45 @@
+
+select,select option{
+  font:bold 14px 微軟正黑體;
+  height:22px;
+  cursor:pointer;
+}
+#MyMsg{
+  font:normal 18px 微軟正黑體;
+  box-sizing:border-box;
+  border:1px solid;
+  width:320px;
+  height:96px;
+}
+#MyMsg:focus{
+  background:#ffd;
+}
+#EmojiBox{
+  box-sizing:border-box;
+  border:1px solid;
+  width:320px;
+  height:96px;
+  padding:2px;
+  word-wrap: break-word;
+  overflow-y:auto;
+  background:#fff;
+  user-select:none;
+}
+#EmojiBox .test_icon{
+  display:inline-block;
+  width:26px;
+  height:26px;
+  font-size:18px;
+  padding:2px;
+  border-radius:5px;
+  text-align:center;
+  cursor:pointer;
+}
+#EmojiBox .test_icon:hover{
+  background:#bdf;
+}
+.cText{
+  font:bold 16px 微軟正黑體;
+  color:#fff;
+  text-shadow: 2px 2px #000;
+}

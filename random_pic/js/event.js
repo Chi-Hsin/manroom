@@ -1,7 +1,13 @@
 //Window Onload progress
   $(function(){
 
- $("#welcome_title").append("歡迎來到"+room_num+"聊天室");
+ $("#welcome_title").append("<h1>歡迎來到"+room_num+"聊天室</h1>");
+
+var s = document.createElement("script");//引入設置相關的JS文件
+s.src = "js/setup.js";
+document.body.appendChild(s);
+
+
 
 setTimeout(function(){$("#loading").hide()},2000);
 if(localStorage.getItem("color") == null) //新進使用者獲得一個隨機顏色
@@ -180,26 +186,37 @@ $("#chat_area").on(
   })
   $("#input_area").on('keydown', function(e)//輸入對話欄
   {
-    if(e.key == "Enter" && e.target.value != "")
+    if(localStorage.getItem("setup_enter_action") == "checked")
     {
-      // write($(this).val(),"text");
-      // $("#input_area").val("");
-      // var e = document.getElementById("chat_area");
-      // e.scrollTop = e.scrollHeight;
-      if(e.shiftKey)//換行
+      if(e.key == "Enter" && e.target.value != "")
       {
-         //alert()
+        // write($(this).val(),"text");
+        // $("#input_area").val("");
+        
+        if(e.shiftKey)//換行
+        {
+           //alert()
+        }
+        else
+        {
+           $("#msg_send").click();
+           e.preventDefault();
+        }
       }
-      else
-      {
-         $("#msg_send").click();
-         e.preventDefault();
-      }
-     
     }
-
   });
- 
+  $("#setup_enter_action").click(function(){
+    if(localStorage.getItem("setup_enter_action") == "checked")
+    {
+      localStorage.setItem("setup_enter_action","unchecked");
+      alert(localStorage.getItem("setup_enter_action"))
+    }
+    else
+    {
+      localStorage.setItem("setup_enter_action","checked");
+      alert(localStorage.getItem("setup_enter_action"))
+    }
+  })
 
 
   $("#msg_send").click(function(e){
@@ -209,26 +226,135 @@ $("#chat_area").on(
       e.scrollTop = e.scrollHeight;
       // alert($("#input_area").html())
   })
-  $("#test_icon").click(function(){
-    // $("#input_area").append("<p>123</p>");
-    var img = document.createElement("img");
-    img.classList.add("icon_emotion");
-    img.src = this.src;
-    $("#input_area").append(img);
+  $("#EmojiBox").on("click",".test_icon",function(){
+    $("#input_area").focus();
+    var selection = getSelection();
+    var range = selection.getRangeAt(0);
+    if($(this).prop("tagName") == "IMG")
+    {
+      var img = document.createElement("img");
+      img.classList.add("icon_emotion");
+      img.src = this.src;
+      range.insertNode(img);
+    }
+    else
+    {
+      var span = document.createElement("span");
+      span.innerHTML = $(this).html();
+      range.insertNode(span);
+    }
+    // var textNode = range.startContainer;
+    //   var rangeStartOffset = range.startOffset;
+      // range.setStart(textNode,
+      //                 textNode+1);
+    range.collapse(true);
+    selection.addRange(range);
   })
-my_db.once("value",function(s)//資料第一次全部載入
-  {
-      $("#chat_area").html("");
-      for(var i in  s.val())
-      {
-       var sv = s.val()[i];
-       append_dialogue(sv);
-      }
-      // alert("加載完成")
+  $("#setup").click(function(){//是否隱藏設置的框框
+    if(setup_box ==1)
+    {
+      $("#setup_box").slideUp();
+      setup_box = 0;
+    }
+    else
+    {
+      $("#setup_box").slideDown();
+      setup_box = 1;
+    }
   })
-  my_db.limitToLast(1).on("value",function(s)//最後變動資料  一有資料寫入就會即時更新聊天室的消息顯示紀錄
+  $("#test_delete").click(function(){
+    firebase.database().ref("/"+room_num+"/public_message").remove();
+  })
+  $(".sign_in").click(function(){  //使用者登入
+    if($(this).attr("id") == "fb_sign_in")
+    {
+      var provider = new firebase.auth.FacebookAuthProvider();
+    }
+    else if($(this).attr("id") == "gg_sign_in")
+    {
+      var provider = new firebase.auth.GoogleAuthProvider();
+    }
+    firebase.auth().signInWithPopup(provider).then(function(result) {
+      var user_data = JSON.stringify(result.user.providerData[0]);
+      var data = result.user.providerData[0];
+      localStorage.setItem("user_data",user_data);
+      firebase.database().ref(room_num).child("online_user").child(data.uid).set(data.displayName);
+      window.location.reload();
+      
+    }).catch(function(error) {
+      // 處理錯誤
+      var errorCode     = error.code;
+      var errorMessage  = error.message;     
+      var email         = error.email;      // 使用者所使用的 Email
+      var credential    = error.credential;
+      console.log(errorCode+","+errorMessage+","+credential);
+    });
+  })
+  $("#sign_out").click(function(){
+    firebase.auth().signOut()
+                   .then(function()
+                    {
+                      var name = localStorage.getItem("name");
+                      var uid = JSON.parse(localStorage.getItem("user_data")).uid;
+                      firebase.database().ref(room_num)
+                                         .child("online_user")
+                                         .child(uid)
+                                         .remove();
+                      localStorage.removeItem("user_data");
+                      localStorage.removeItem("name");
+                      alert("已登出");
+                      window.location.reload();
+                    })
+
+                   // .catch(function(e){alert(e)})
+  })
+$("#user_list").on("click",".online_user_name",function()
+                                                  {
+                                                    $("#input_area").focus();
+                                                    var selection = getSelection();
+                                                    var range = selection.getRangeAt(0);
+                                                     var span = document.createElement("span");
+                                                    span.innerHTML = $(this).text();
+                                                    range.insertNode(span);
+                                                    range.collapse(true);
+                                                    selection.addRange(range);
+                                                  })
+firebase.database().ref(room_num+"/online_user").on("value",function(s)//關注使用者名單節點的變化
+{
+  //偵測到有新的使用者登入
+  $("#user_list").html("在線使用者名單");
+  for(var i in s.val())
   {
-    
+    var p = document.createElement("p");
+    var a = document.createElement("a");
+    a.innerText = s.val()[i];
+    a.href = "javascript:;"
+    p.className = "online_user_name";
+    p.id =  Object.keys(s.val())[0];
+    p.appendChild(a);
+    $("#user_list").append(p);
+  }
+  // var keys = Object.keys(s.val());
+  // var mykey = keys[0];
+  // console.log(s.val()[mykey]);
+    // $("#user_list").append("<p>"+s.val()[mykey]+"</p>")
+})
+firebase.database().ref("/"+room_num+"/public_message").once("value",function(s)//資料第一次全部載入
+            {
+              $("#chat_area").html("");
+              for(var i in  s.val())
+              {
+               var sv = s.val()[i];
+               append_dialogue(sv);
+              }
+            })
+     .then(function()
+            {
+              var e = document.getElementById("chat_area");//所有訊息載入成功後  直接到達底部
+              e.scrollTop = e.scrollHeight;
+            })
+firebase.database().ref("/"+room_num+"/public_message").limitToLast(1).on("value",function(s)//最後變動資料  一有資料寫入就會即時更新聊天室的消息顯示紀錄
+  {
     for(var i in  s.val())
     {
       var sv = s.val()[i];
@@ -238,7 +364,7 @@ my_db.once("value",function(s)//資料第一次全部載入
         if(sv.content.indexOf(msg_event[j].txt) != -1)
         {
           msg_event[j].fn();
-          my_db.push(
+          firebase.database().ref("/"+room_num+"/public_message").push(
           {
             type: "text",
             name: "機器人",
