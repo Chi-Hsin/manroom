@@ -110,6 +110,11 @@ body
   width:60%;
   word-break: break-all;
 }
+.content_zone img
+{
+  display: block;
+  margin:auto;
+}
 .icon_emotion{width:30px;height: 30px;}
 #zoom_out /*縮小/放大聊天室視窗*/
 {

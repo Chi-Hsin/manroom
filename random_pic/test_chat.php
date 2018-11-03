@@ -22,7 +22,7 @@
     <div id="input_area" autofocus  contenteditable="true" ></div>
     <button id="msg_send">送出</button>
     <button id="name_fix">修改暱稱</button>
-    <button id="test_delete">刪除所有資料測試</button>
+    <!-- <button id="test_delete">刪除所有資料測試</button> -->
     <button id="sign_out">登出</button>
     <button class="sign_in" id="fb_sign_in">FB登入</button>
     <button class="sign_in" id="gg_sign_in">Google登入</button>

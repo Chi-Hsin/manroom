@@ -6,7 +6,7 @@
 var s = document.createElement("script");//引入設置相關的JS文件
 s.src = "js/setup.js";
 document.body.appendChild(s);
-
+append_dialogue_operator = new append_dialogue(); //製造一個用來產生對話用的物件  供全域使用
 
 
 setTimeout(function(){$("#loading").hide()},2000);
@@ -220,10 +220,9 @@ $("#chat_area").on(
 
 
   $("#msg_send").click(function(e){
-      write($("#input_area").html(),"text");
-      $("#input_area").html("");
-      var e = document.getElementById("chat_area");
-      e.scrollTop = e.scrollHeight;
+      var msg_event = new message_event($("#input_area").html(),$("#input_area").text());
+      msg_event.check1().check2().check3().check4().check5().check6();
+      
       // alert($("#input_area").html())
   })
   $("#EmojiBox").on("click",".test_icon",function(){
@@ -345,7 +344,7 @@ firebase.database().ref("/"+room_num+"/public_message").once("value",function(s)
               for(var i in  s.val())
               {
                var sv = s.val()[i];
-               append_dialogue(sv);
+              append_dialogue_operator.get(sv).public()
               }
             })
      .then(function()
@@ -355,25 +354,32 @@ firebase.database().ref("/"+room_num+"/public_message").once("value",function(s)
             })
 firebase.database().ref("/"+room_num+"/public_message").limitToLast(1).on("value",function(s)//最後變動資料  一有資料寫入就會即時更新聊天室的消息顯示紀錄
   {
-    for(var i in  s.val())
+    // for(var i in  s.val())
+    // {
+    //   var sv = s.val()[i];
+    //   append_dialogue(sv); //處理sv =放上相對應的顯示訊息
+    //   for(var j in msg_event)
+    //   {
+    //     if(sv.content.indexOf(msg_event[j].txt) != -1)
+    //     {
+    //       msg_event[j].fn();
+    //       firebase.database().ref("/"+room_num+"/public_message").push(
+    //       {
+    //         type: "text",
+    //         name: "機器人",
+    //         content: msg_event[j].msg,
+    //         color: localStorage.getItem("color"),
+    //         time: getTime()//這筆紀錄就存到資料庫的下一筆資料  下個迴圈就會印出來
+    //       })
+    //     }
+    //   }
+    // }
+    for(i in s.val())
     {
-      var sv = s.val()[i];
-      append_dialogue(sv); //處理sv =放上相對應的顯示訊息
-      for(var j in msg_event)
-      {
-        if(sv.content.indexOf(msg_event[j].txt) != -1)
-        {
-          msg_event[j].fn();
-          firebase.database().ref("/"+room_num+"/public_message").push(
-          {
-            type: "text",
-            name: "機器人",
-            content: msg_event[j].msg,
-            color: localStorage.getItem("color"),
-            time: getTime()//這筆紀錄就存到資料庫的下一筆資料  下個迴圈就會印出來
-          })
-        }
-      }
+     append_dialogue_operator.get(s.val()[i]).public()
     }
+    $("#input_area").html(""); //寫入資料庫後  這邊有了變動  也就是送出訊息後  清空這個對話框
+    var e = document.getElementById("chat_area");
+    e.scrollTop = e.scrollHeight; //置底
   })
 })//document.ready結尾
